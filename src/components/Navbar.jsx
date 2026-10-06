@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+
 import { Menu, X, ArrowUpRight } from "lucide-react";
+
 import { AnimatePresence, motion } from "framer-motion";
 
 const navItems = [
@@ -17,6 +25,7 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
@@ -31,6 +40,7 @@ function Navbar() {
     };
   }, []);
 
+  // Prevent background scrolling when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
 
@@ -43,8 +53,10 @@ function Navbar() {
     setMenuOpen(false);
   };
 
+  // Tile Finder navigation
   const handleTileFinder = (e) => {
     e.preventDefault();
+
     closeMenu();
 
     if (location.pathname === "/") {
@@ -64,6 +76,7 @@ function Navbar() {
 
   return (
     <>
+      {/* ================= NAVBAR ================= */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
@@ -72,38 +85,38 @@ function Navbar() {
         }`}
       >
         <div className="mx-auto flex h-[82px] max-w-[1500px] items-center justify-between px-6 md:px-10 lg:px-12">
-          {/* Brand */}
+
+          {/* ================= BRAND / LOGO ================= */}
           <Link
             to="/"
             onClick={closeMenu}
-            className="group flex items-center gap-3"
+            className="group flex items-center"
+            aria-label="Shree Hari Traders"
           >
-            <div
-              className={`flex h-11 w-11 items-center justify-center border text-sm font-semibold tracking-[0.18em] transition-all duration-500 ${
+            {/* Logo for dark hero background */}
+            <img
+              src="/SHT-logo.png"
+              alt="Shree Hari Traders"
+              className={`h-12 w-auto object-contain transition-all duration-500 ${
                 scrolled
-                  ? "border-[#a56a43] text-[#a56a43]"
-                  : "border-white/70 text-white"
+                  ? "hidden"
+                  : "block"
               }`}
-            >
-              SHT
-            </div>
+            />
 
-            <div className="hidden sm:block leading-none">
-              <div className="text-[13px] font-semibold tracking-[0.22em]">
-                SHREE HARI
-              </div>
-
-              <div
-                className={`mt-1 text-[9px] tracking-[0.32em] transition-colors duration-500 ${
-                  scrolled ? "text-[#a56a43]" : "text-white/70"
-                }`}
-              >
-                TRADERS
-              </div>
-            </div>
+            {/* Logo for light/cream navbar */}
+            <img
+              src="/SHT-white-logo.png"
+              alt="Shree Hari Traders"
+              className={`h-12 w-auto object-contain transition-all duration-500 ${
+                scrolled
+                  ? "block"
+                  : "hidden"
+              }`}
+            />
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* ================= DESKTOP NAVIGATION ================= */}
           <nav className="hidden items-center gap-8 md:flex">
             {navItems.map((item) =>
               item.name === "Tile Finder" ? (
@@ -139,7 +152,9 @@ function Navbar() {
 
                       <span
                         className={`absolute bottom-0 left-0 h-px bg-current transition-all duration-300 ${
-                          isActive ? "w-full" : "w-0 group-hover:w-full"
+                          isActive
+                            ? "w-full"
+                            : "w-0 group-hover:w-full"
                         }`}
                       />
                     </>
@@ -148,6 +163,7 @@ function Navbar() {
               )
             )}
 
+            {/* Get a Quote */}
             <Link
               to="/contact"
               className={`group flex items-center gap-2 border px-5 py-3 text-[12px] font-medium tracking-wide transition-all duration-300 ${
@@ -165,19 +181,23 @@ function Navbar() {
             </Link>
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* ================= MOBILE MENU BUTTON ================= */}
           <button
             type="button"
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             className="flex h-11 w-11 items-center justify-center md:hidden"
           >
-            {menuOpen ? <X size={25} /> : <Menu size={25} />}
+            {menuOpen ? (
+              <X size={25} />
+            ) : (
+              <Menu size={25} />
+            )}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* ================= MOBILE MENU ================= */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -188,6 +208,8 @@ function Navbar() {
             className="fixed inset-0 z-40 bg-[#f7f4ef] pt-[82px] md:hidden"
           >
             <div className="flex h-full flex-col justify-between px-6 py-10">
+
+              {/* Mobile Navigation */}
               <nav className="flex flex-col">
                 {navItems.map((item, index) =>
                   item.name === "Tile Finder" ? (
@@ -206,6 +228,7 @@ function Navbar() {
                         className="flex items-center justify-between border-b border-[#252525]/10 py-5 text-3xl font-medium"
                       >
                         {item.name}
+
                         <ArrowUpRight size={22} />
                       </a>
                     </motion.div>
@@ -225,6 +248,7 @@ function Navbar() {
                         className="flex items-center justify-between border-b border-[#252525]/10 py-5 text-3xl font-medium"
                       >
                         {item.name}
+
                         <ArrowUpRight size={22} />
                       </NavLink>
                     </motion.div>
@@ -232,12 +256,14 @@ function Navbar() {
                 )}
               </nav>
 
+              {/* Mobile Quote Button */}
               <Link
                 to="/contact"
                 onClick={closeMenu}
                 className="flex items-center justify-between border border-[#252525] px-5 py-4 text-sm font-medium"
               >
                 Request a Quote
+
                 <ArrowUpRight size={18} />
               </Link>
             </div>
